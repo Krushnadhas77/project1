@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Change Calculator</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+        }
+        #result {
+            white-space: pre-wrap;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Change Calculator</h2>
+    <label>Bill Amount (₹):</label>
+    <input type="number" id="bill" step="0.01">
+
+    <label>Paid Amount (₹):</label>
+    <input type="number" id="paid" step="0.01">
+
+    <button onclick="calculateChange()">Calculate</button>
+
+    <div id="result"></div>
+
+    <script>
+        function calculateChange() {
+            const bill = parseFloat(document.getElementById('bill').value);
+            const paid = parseFloat(document.getElementById('paid').value);
+            let result = "";
+
+            if (isNaN(bill) || isNaN(paid)) {
+                result = "Please enter valid numbers.";
+            } else if (paid < bill) {
+                result = "Paid amount is less than the bill!";
+            } else {
+                let change = +(paid - bill).toFixed(2);
+                result += `Total Change: ₹${change}\n\nChange Breakdown:\n`;
+                const denominations = [2000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5, 0.25];
+
+                denominations.forEach(denom => {
+                    let count = Math.floor(change / denom);
+                    if (count > 0) {
+                        result += (denom >= 1) ?
+                            `₹${denom} x ${count}\n` :
+                            `${denom * 100}p x ${count}\n`;
+                        change = +(change - count * denom).toFixed(2);
+                    }
+                });
+            }
+
+            document.getElementById('result').textContent = result;
+        }
+    </script>
+</body>
+</html>
